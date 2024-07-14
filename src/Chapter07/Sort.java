@@ -25,6 +25,20 @@ public class Sort {
         return i+1 ;
     }
 
+    static void stoogeSort(int[] a, int i, int j) {
+        if (i >= j)
+            return;
+        if (a[i] > a[j])
+            exchange(a, i, j);
+        if (j - i > 1) {
+            int k = (j - i + 1) / 3;
+            stoogeSort(a, i, j - k);
+            stoogeSort(a, i + k, j);
+            stoogeSort(a, i, j - k);
+        }
+    }
+
+
     public static void exchange(int[] a, int i, int j){
         int temp = a[i];
         a[i] = a[j] ;
@@ -33,7 +47,7 @@ public class Sort {
 
     public static void main(String[] args){
         int[] a = {3, 1, 7, 12, 10, 5, 8, 11};
-        quickSort(a, 0, a.length-1);
+        stoogeSort(a, 0, a.length-1);
         System.out.println(Arrays.toString(a));
     }
 }
