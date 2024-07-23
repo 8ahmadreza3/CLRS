@@ -1,4 +1,4 @@
-package Chapter05;
+package S01_Foundations.Chapter05;
 
 public class HireAssistant {
 

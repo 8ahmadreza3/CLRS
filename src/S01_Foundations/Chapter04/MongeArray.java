@@ -1,4 +1,4 @@
-package Chapter04;
+package S01_Foundations.Chapter04;
 
 public class MongeArray {
 

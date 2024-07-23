@@ -1,4 +1,4 @@
-package Chapter02 ;
+package S01_Foundations.Chapter02;
 
 import java.util.Arrays;
 
