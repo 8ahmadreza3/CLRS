@@ -1,4 +1,4 @@
-package Chapter08;
+package S02_SortingAndOrderStatistics.Chapter08;
 
 import java.util.ArrayList;
 import java.util.Arrays;
