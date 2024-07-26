@@ -5,6 +5,15 @@ public class LinkedList {
     Node last ;
     int size ;
 
+    static class Node{
+        int value ;
+        Node next ;
+        public Node(int value){
+            this.value = value ;
+            this.next = null ;
+        }
+    }
+
     boolean isEmpty(){
         return first == null ;
     }
@@ -141,14 +150,5 @@ public class LinkedList {
             q = q.next ;
         }
         return p.value ;
-    }
-}
-
-class Node{
-    int value ;
-    Node next ;
-    public Node(int value){
-        this.value = value ;
-        this.next = null ;
     }
 }
