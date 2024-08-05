@@ -1,8 +1,6 @@
 package S03_DataStructures.Chapter13;
 
-import S03_DataStructures.Chapter10.Tree;
-
-public class RBT {
+public class RBT { // red-black tree
     Node root ;
 
     public RBT(int value){
@@ -18,10 +16,10 @@ public class RBT {
 
         leftChild.right = node;
         node.parent = leftChild;
-        replaceParentsChild(parent, node, leftChild);
+        replaceChild(parent, node, leftChild);
     }
 
-    private void replaceParentsChild(Node parent, Node oldChild, Node newChild) {
+    void replaceChild(Node parent, Node oldChild, Node newChild) {
         if (parent == null)
             root = newChild;
         else if (parent.left == oldChild)
@@ -35,7 +33,7 @@ public class RBT {
             newChild.parent = parent;
     }
 
-    private void rotateLeft(Node node) {
+    void rotateLeft(Node node) {
         Node parent = node.parent;
         Node rightChild = node.right;
         node.right = rightChild.left;
@@ -44,10 +42,85 @@ public class RBT {
 
         rightChild.left = node;
         node.parent = rightChild;
-        replaceParentsChild(parent, node, rightChild);
+        replaceChild(parent, node, rightChild);
     }
 
-    public Node searchNode(int key) {
+    public void insert(int key) {
+        Node node = root;
+        Node parent = null;
+        while (node != null) {
+            parent = node;
+            if (key < node.value)
+                node = node.left;
+            else if (key > node.value)
+                node = node.right;
+            else
+                throw new IllegalArgumentException("BST already contains a node with key " + key);
+        }
+        // Insert new node
+        Node newNode = new Node(key);
+        newNode.color = "red";
+        if (parent == null)
+            root = newNode;
+        else if (key < parent.value)
+            parent.left = newNode;
+        else
+            parent.right = newNode;
+
+        newNode.parent = parent;
+        fixUP(newNode);
+    }
+
+    void fixUP(Node node) {
+        Node parent = node.parent;
+        if (parent == null)
+            return;
+        if (parent.color == "black")
+            return;
+        Node grandparent = parent.parent;
+        if (grandparent == null) {
+            parent.color = "black";
+            return;
+        }
+        Node uncle = getUncle(parent);
+        if (uncle != null && uncle.color == "red") {
+            parent.color = "black";
+            grandparent.color = "red";
+            uncle.color = "black";
+            fixUP(grandparent);
+        }
+        else if (parent == grandparent.left) {
+            if (node == parent.right) {
+                rotateLeft(parent);
+                 parent = node;
+            }
+            rotateRight(grandparent);
+            parent.color = "black";
+            grandparent.color = "red";
+        }
+        else {
+            if (node == parent.left) {
+                rotateRight(parent);
+                parent = node;
+            }
+            rotateLeft(grandparent);
+            parent.color = "black";
+            grandparent.color = "red";
+        }
+    }
+
+    Node getUncle(Node parent) {
+        Node grandparent = parent.parent;
+        if (grandparent.left == parent) {
+            return grandparent.right;
+        } else if (grandparent.right == parent) {
+            return grandparent.left;
+        } else {
+            throw new IllegalStateException("Parent is not a child of its grandparent");
+        }
+    }
+
+    Node searchNode(int key) {
         Node node = root;
         while (node != null) {
             if (key == node.value)
@@ -59,6 +132,8 @@ public class RBT {
         }
         return null;
     }
+
+    
 
     static class Node{
         int value ;
