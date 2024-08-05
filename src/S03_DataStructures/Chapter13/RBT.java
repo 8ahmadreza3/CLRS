@@ -45,7 +45,7 @@ public class RBT { // red-black tree
         replaceChild(parent, node, rightChild);
     }
 
-    public void insert(int key) {
+    void insert(int key) {
         Node node = root;
         Node parent = null;
         while (node != null) {
@@ -111,13 +111,12 @@ public class RBT { // red-black tree
 
     Node getUncle(Node parent) {
         Node grandparent = parent.parent;
-        if (grandparent.left == parent) {
+        if (grandparent.left == parent)
             return grandparent.right;
-        } else if (grandparent.right == parent) {
+        else if (grandparent.right == parent)
             return grandparent.left;
-        } else {
+        else
             throw new IllegalStateException("Parent is not a child of its grandparent");
-        }
     }
 
     Node searchNode(int key) {
@@ -133,7 +132,132 @@ public class RBT { // red-black tree
         return null;
     }
 
-    
+    void deleteNode(int key) {
+        Node node = root;
+        while (node != null && node.value != key) {
+            if (key < node.value)
+                node = node.left;
+            else
+                node = node.right;
+        }
+        if (node == null)
+            return;
+
+        Node movedUpNode;
+        String deletedNodeColor;
+
+        if (node.left == null || node.right == null) {
+            movedUpNode = deleteNodeWithZeroOrOneChild(node);
+            deletedNodeColor = node.color;
+        } else {
+            Node inOrderSuccessor = findMinimum(node.right);
+            node.value = inOrderSuccessor.value;
+            movedUpNode = deleteNodeWithZeroOrOneChild(inOrderSuccessor);
+            deletedNodeColor = inOrderSuccessor.color;
+        }
+
+        if (deletedNodeColor == "black") {
+            fixUPAfterDelete(movedUpNode);
+            if (movedUpNode.getClass() == NilNode.class)
+                replaceChild(movedUpNode.parent, movedUpNode, null);
+        }
+    }
+
+    Node deleteNodeWithZeroOrOneChild(Node node) {
+        if (node.left != null) {
+            replaceChild(node.parent, node, node.left);
+            return node.left;
+        }
+        else if (node.right != null) {
+            replaceChild(node.parent, node, node.right);
+            return node.right;
+        } else {
+            Node newChild = node.color == "black" ? new NilNode() : null;
+            replaceChild(node.parent, node, newChild);
+            return newChild;
+        }
+    }
+
+    Node findMinimum(Node node) {
+        while (node.left != null)
+            node = node.left;
+
+        return node;
+    }
+
+    void fixUPAfterDelete(Node node) {
+        if (node == root)
+            return;
+
+        Node sibling = getSibling(node);
+        if (sibling.color == "red") {
+            handleRedSibling(node, sibling);
+            sibling = getSibling(node);
+        }
+        if (isBlack(sibling.left) && isBlack(sibling.right)) {
+            sibling.color = "red";
+            if (node.parent.color == "red")
+                node.parent.color = "black";
+            else
+                fixUPAfterDelete(node.parent);
+        } else
+            handleBlackSiblingWithAtLeastOneRedChild(node, sibling);
+    }
+
+    Node getSibling(Node node) {
+        Node parent = node.parent;
+        if (node == parent.left)
+            return parent.right;
+        else if (node == parent.right)
+            return parent.left;
+        else
+            throw new IllegalStateException("Parent is not a child of its grandparent");
+    }
+
+    private void handleRedSibling(Node node, Node sibling) {
+        sibling.color = "black";
+        node.parent.color = "red";
+        if (node == node.parent.left)
+            rotateLeft(node.parent);
+        else
+            rotateRight(node.parent);
+    }
+
+    void handleBlackSiblingWithAtLeastOneRedChild(Node node, Node sibling) {
+        boolean nodeIsLeftChild = node == node.parent.left;
+
+        if (nodeIsLeftChild && isBlack(sibling.right)) {
+            sibling.left.color = "black";
+            sibling.color = "red";
+            rotateRight(sibling);
+            sibling = node.parent.right;
+        } else if (!nodeIsLeftChild && isBlack(sibling.left)) {
+            sibling.right.color = "black";
+            sibling.color = "red";
+            rotateLeft(sibling);
+            sibling = node.parent.left;
+        }
+        sibling.color = node.parent.color;
+        node.parent.color = "black";
+        if (nodeIsLeftChild) {
+            sibling.right.color = "black";
+            rotateLeft(node.parent);
+        } else {
+            sibling.left.color = "black";
+            rotateRight(node.parent);
+        }
+    }
+
+    boolean isBlack(Node node) {
+        return node == null || node.color == "black";
+    }
+
+    static class NilNode extends Node {
+        private NilNode() {
+            super(0);
+            this.color = "black";
+        }
+    }
 
     static class Node{
         int value ;
