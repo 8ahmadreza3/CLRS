@@ -1,0 +1,3 @@
+Introduction to Algorithms is a book on computer programming by Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest, and Clifford Stein. The book has been widely used as the textbook for algorithms courses at many universities and is commonly cited as a reference for algorithms in published papers, with over 10,000 citations documented on CiteSeerX, and over 67,000 citation on Google Scholar as of 2023. The book sold half a million copies during its first 20 years, and surpassed a million copies sold in 2022. Its fame has led to the common use of the abbreviation "CLRS" (Cormen, Leiserson, Rivest, Stein).
+
+<img src='./Clrs4.jpeg'>
