@@ -44,6 +44,17 @@ class MatrixChain{
     return min ;
   }
 
+  void printOptimalParents(int[][] s, int i, int j){
+    if(i == j)
+      System.out.print("A");
+    else {
+      System.out.print("(");
+      printOptimalParents(s, i, s[i][j]);
+      printOptimalParents(s, s[i][j]+1, j);
+      System.out.print(")");
+    }
+  }
+
   public static void main(String[] args){
     int[] p = {4, 5, 11, 17, 6, 7} ;
     int size = p.length ;
