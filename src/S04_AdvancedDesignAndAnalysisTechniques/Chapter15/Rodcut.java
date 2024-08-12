@@ -1,4 +1,4 @@
-import java.util.Arrays;
+package S04_AdvancedDesignAndAnalysisTechniques.Chapter15;
 
 class Rodcut {
 
@@ -21,12 +21,12 @@ class Rodcut {
   }
 
   static int rodcutTD(int[] price, int index, int[] r, int[]s){
-    if (index <= 1) {
+    if (index <= 1)
       return price[index];
-    }
-    if( r[index] > 0){
+
+    if( r[index] > 0)
       return r[index];
-    }
+
     int max = Integer.MIN_VALUE;
     for(int k=1 ; k<=index ; ++k){
       int p = price[k] + rodcutTD(price, index - k, r, s);
@@ -37,16 +37,16 @@ class Rodcut {
     }
     r[index] = max ;
     return max ;
-    }
+  }
 
-    static void printRodcut(int[] s, int n){
-      if(n <= 1){
-        System.out.println("No Cut");
-        return ;
-      }
-      System.out.println("Cut:" + s[n]);
-      printRodcut(s, n-s[n]);
+  static void printRodcut(int[] s, int n){
+    if(n <= 1){
+      System.out.println("No Cut");
+      return ;
     }
+    System.out.println("Cut:" + s[n]);
+    printRodcut(s, n-s[n]);
+  }
 
   public static void main(String[] args){
     int[] price = { 0, 5, 11 };

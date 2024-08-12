@@ -26,12 +26,11 @@ class MatrixChain{
   }
 
   static int matrixChainTD(int[] p, int i, int j, int[][] r, int[][] s){
-    if(j <= i){
+    if(j <= i)
       return 0;
-    }
-    if(r[i][j] > 0){
+    if(r[i][j] > 0)
       return r[i][j] ;
-    }
+
     int min = Integer.MAX_VALUE ;
     for(int k=i ; k<j ; ++k){
       int q = matrixChainTD(p, i, k, r, s) + matrixChainTD(p, k+1, j, r, s) + p[i-1] * p[k] * p[j] ;
