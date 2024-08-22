@@ -78,4 +78,51 @@ class BTree {
         }
     }
 
+    void insertNonFull(BTreeNode node, int k) {
+        int i = node.n - 1;
+
+        if (node.isLeaf) {
+            while (i >= 0 && k < node.keys[i]) {
+                node.keys[i + 1] = node.keys[i];
+                i--;
+            }
+            node.keys[i + 1] = k;
+            node.n++;
+        } else {
+            while (i >= 0 && k < node.keys[i])
+                i--;
+            i++;
+            if (node.children[i].n == 2*t-1) {
+                splitChild(node, i);
+                if (node.keys[i] < k)
+                    i++;
+            }
+            insertNonFull(node.children[i], k);
+        }
+    }
+
+    void splitChild(BTreeNode parent, int i) {
+        BTreeNode fullChild = parent.children[i];
+        BTreeNode newChild = new BTreeNode(fullChild.t, fullChild.isLeaf);
+        newChild.n = t - 1;
+
+        for (int j = 0; j < t - 1; j++)
+            newChild.keys[j] = fullChild.keys[j + t];
+
+        if (!fullChild.isLeaf)
+            for (int j = 0; j < t; j++)
+                newChild.children[j] = fullChild.children[j + t];
+
+        fullChild.n = t - 1;
+
+        for (int j = parent.n; j >= i + 1; j--)
+            parent.children[j + 1] = parent.children[j];
+
+        parent.children[i + 1] = newChild;
+        for (int j = parent.n - 1; j >= i; j--)
+            parent.keys[j + 1] = parent.keys[j];
+
+        parent.keys[i] = fullChild.keys[t - 1];
+        parent.n++;
+    }
 }
