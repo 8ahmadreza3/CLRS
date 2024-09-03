@@ -55,5 +55,20 @@ public class Graph {
         }
     }
 
+
+    void DFSRec(boolean[] visited, int s){
+        visited[s] = true;
+        System.out.print(s + " ");
+
+        for (int i : adjList[s]) {
+            if (!visited[i])
+                DFSRec(visited, i);
+        }
+    }
+
+    void DFS(int s) {
+        boolean[] visited = new boolean[adjList.length];
+        DFSRec(visited, s);
+    }
 }
 
