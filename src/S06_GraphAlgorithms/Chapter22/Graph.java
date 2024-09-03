@@ -55,6 +55,32 @@ public class Graph {
         }
     }
 
+    boolean DFSUtil(int u, int[] color) {
+        color[u] = GRAY;
+        for (Integer in : adjList[u]) {
+            if (color[in] == GRAY)
+                return true;
+
+            if (color[in] == WHITE && DFSUtil(in, color))
+                return true;
+        }
+
+        color[u] = BLACK;
+        return false;
+    }
+
+    boolean isCyclic(Graph g) {
+        int[] color = new int[g.V];
+        for (int i = 0; i < g.V; i++) {
+            color[i] = WHITE;
+        }
+        for (int i = 0; i < g.V; i++) {
+            if (color[i] == WHITE)
+                if(DFSUtil(i, color))
+                    return true;
+        }
+        return false;
+    }
 
     void DFSRec(boolean[] visited, int s){
         visited[s] = true;
