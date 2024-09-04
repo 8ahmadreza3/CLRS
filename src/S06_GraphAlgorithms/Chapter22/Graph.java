@@ -120,5 +120,57 @@ public class Graph {
 
     }
 
+    boolean dfs(int curr, int des, List<Integer> vis) {
+        if (curr == des)
+            return true;
+
+        vis.set(curr, 1);
+        for (int x : adjList[curr])
+            if (vis.get(x) == 0)
+                if (dfs(x, des, vis))
+                    return true;
+
+        return false;
+    }
+
+    boolean isPath(int src, int des) {
+        List<Integer> vis = new ArrayList<>(adjList.length + 1);
+        for (int i = 0; i <= adjList.length; i++) {
+            vis.add(0);
+        }
+        return dfs(src, des, vis);
+    }
+
+    List<List<Integer>> findSCC(int n, List<List<Integer>> a) {
+        List<List<Integer>> ans = new ArrayList<>();
+
+        List<Integer> is_scc = new ArrayList<>(n + 1);
+        for (int i = 0; i <= n; i++) {
+            is_scc.add(0);
+        }
+
+        List<List<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i <= n; i++) {
+            adj.add(new ArrayList<>());
+        }
+
+        for (List<Integer> edge : a)
+            adj.get(edge.get(0)).add(edge.get(1));
+
+        for (int i = 1; i <= n; i++) {
+            if (is_scc.get(i) == 0) {
+                List<Integer> scc = new ArrayList<>();
+                scc.add(i);
+                for (int j = i + 1; j <= n; j++) {
+                    if (is_scc.get(j) == 0 && isPath(i, j) && isPath(j, i)) {
+                        is_scc.set(j, 1);
+                        scc.add(j);
+                    }
+                }
+                ans.add(scc);
+            }
+        }
+        return ans;
+    }
 }
 
