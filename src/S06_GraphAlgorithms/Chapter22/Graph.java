@@ -96,5 +96,29 @@ public class Graph {
         boolean[] visited = new boolean[adjList.length];
         DFSRec(visited, s);
     }
+
+    void topologicalSortUtil(boolean[] visited, Stack<Integer> stack) {
+        visited[V] = true;
+
+        for (int i : adjList[V]) {
+            if (!visited[i])
+                topologicalSortUtil(visited, stack);
+        }
+        stack.push(V);
+    }
+
+    void topologicalSort() {
+        Stack<Integer> stack = new Stack<>();
+        boolean[] visited = new boolean[V];
+
+        for (int i = 0; i < V; i++) {
+            if (!visited[i])
+                topologicalSortUtil(visited, stack);
+        }
+        while (!stack.empty())
+            System.out.print(stack.pop() + " ");
+
+    }
+
 }
 
