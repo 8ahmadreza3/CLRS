@@ -5,7 +5,9 @@ import java.util.*;
 class SingleSourceShortestPaths {
     List<List<Pair>> adj;
     int V, E;
-    Edge edge[];
+    Edge[] edge;
+    Vector<Pair>[] graph = new Vector[100000];
+
 
     static class Pair {
         int first, second;
@@ -22,6 +24,9 @@ class SingleSourceShortestPaths {
         for (int i = 0; i < V; i++) {
             adj.add(new ArrayList<>());
         }
+        for (int i = 0; i < graph.length; i++) {
+            graph[i] = new Vector<Pair>();
+        }
     }
 
     SingleSourceShortestPaths(int v, int e) {
@@ -32,9 +37,10 @@ class SingleSourceShortestPaths {
             edge[i] = new Edge();
     }
 
-    void addEdge(int u, int v, int w) {
+    void addEdge(int u, int v, int w ) {
         adj.get(u).add(new Pair(v, w));
         adj.get(v).add(new Pair(u, w));
+        graph[u].add(new Pair(v, w));
     }
 
     void shortestPath(int src) {
@@ -136,4 +142,52 @@ class SingleSourceShortestPaths {
             System.out.println(i + "   " + dist[i]);
     }
 
+    void shortestPathFaster(int S, int V) {
+        int []d = new int[V + 1];
+        boolean []inQueue = new boolean[V + 1];
+
+        for (int i = 0; i <= V; i++)
+            d[i] = Integer.MAX_VALUE;
+
+        d[S] = 0;
+
+        Queue<Integer> q = new LinkedList<>();
+        q.add(S);
+        inQueue[S] = true;
+
+        while (!q.isEmpty()) {
+            int u = q.peek();
+            q.remove();
+            inQueue[u] = false;
+            for (int i = 0; i < graph[u].size(); i++) {
+                int v = this.graph[u].get(i).first;
+                int weight = graph[u].get(i).second;
+                if (d[v] > d[u] + weight) {
+                    d[v] = d[u] + weight;
+                    if (!inQueue[v]) {
+                        q.add(v);
+                        inQueue[v] = true;
+                    }
+                }
+            }
+        }
+
+        printArr(d, V);
+    }
+
+    public static void main(String[] args) {
+        int v = 5;
+        int se = 1;
+        SingleSourceShortestPaths s = new SingleSourceShortestPaths(v, se);
+
+        s.addEdge(1, 2, 1);
+        s.addEdge(2, 3, 7);
+        s.addEdge(1, 4, 9);
+        s.addEdge(2, 4, -2);
+        s.addEdge(3, 4, 3);
+        s.addEdge(1, 3, 8);
+        s.addEdge(2, 5, 3);
+        s.addEdge(4, 5, -3);
+        s.shortestPathFaster(se, v);
+    }
 }
